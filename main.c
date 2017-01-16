@@ -3,54 +3,47 @@
 
 /* run this program using the console pauser or add your own getch, system("pause") or input loop */
 
-struct lista {
+typedef struct lista {
 	int dana;
 	struct lista *nastepna;                      //wskaznik na nastepny element
+}list;
+
+ list *dodaj (list* poczatek, int wartosc) {        //utworz, potem wsp
+        list *nowa = (list*)malloc(sizeof(list));   //zasada dzia³ania jak "new" w c++
+        nowa->dana = wartosc;
+        nowa->nastepna = NULL;
+		if (poczatek == NULL) {
+        	return nowa;
+		}else {
+			list *temp = poczatek;                //pomocnicza do przemieszczania sie po liscie
+			while (temp->nastepna) {                      //przesuniecie na ostatni element
+            	temp = temp->nastepna;
+    		}
+			temp->nastepna = nowa;                        //przypisanie wartosci
+		}
+		
 };
 
-struct lista *pierwszy = NULL;                   //wskaznik na poczatek listy
-
-struct lista *utworzelement() {                   //tworzy element bez wsp.
-	int wartoscdanej;
-	struct lista*tmp=(struct lista*)malloc(sizeof(struct lista));   //zasada dzia³ania jak "new" w c++
-	printf("Podaj dana: "); 
-	scanf("%d", &wartoscdanej); 
-	printf("\n");
-	tmp->dana = wartoscdanej; 
-	tmp->nastepna = NULL;
-	return tmp;
-};
-
-struct lista *dodaj () {        //utworz, potem wsp
-        struct lista *nowa = utworzelement();         //nowy element
-		struct lista *temp = pierwszy;                //pomocnicza do przemieszczania sie po liscie
-		while (temp->nastepna) {                      //przesuniecie na ostatni element
-            temp = temp->nastepna;
-    	}
-        temp->nastepna = nowa;                        //przypisanie wartosci
-        nowa->nastepna = 0;                           //wskaznik kolejnego na 0 - koniec listy
-};
-
-struct lista *usun (int nr) {
-    struct lista *t = pierwszy;                      //pomocnicza 1.
+list *usun (list* poczatek, int wartosc) {
+    list *t = poczatek;                      //pomocnicza 1.
     int licznik = 1;                                 //numeracja elementu
 	while (t) {
-		if (t->dana == nr) {
+		if (t->dana == wartosc) {
     		if (licznik == 1) {                      //jesli to pierwszy element
-       			struct lista *temp = pierwszy;
-        		pierwszy = temp->nastepna;
+       			list *temp = poczatek;
+        		poczatek = temp->nastepna;
         		t= t->nastepna;                     //przesuwam wskaznik na kolejny element
    			}
 
     		if (licznik > 1) {
-        		struct lista *temp = pierwszy;
+        		list *temp = poczatek;
 
         		while (temp) {                      //przesuniecie na element przed "usuwanym"
             		if (temp->nastepna == t) break;
             		temp = temp->nastepna;
         		}
             	temp->nastepna = temp->nastepna->nastepna;
-				t = pierwszy;
+				t = poczatek;
     			licznik = 1;
     		}
 		}else {
@@ -58,13 +51,14 @@ struct lista *usun (int nr) {
 			licznik++;
 		}
 	}
+	return poczatek;
 };
 
-void wyswietlliste() {
-	struct lista *tmp;
-	tmp = pierwszy;
+void wyswietlliste(poczatek) {
+	list *tmp;
+	tmp = poczatek;
 	
-	if (pierwszy == NULL) {
+	if (poczatek == NULL) {
 		printf("[pusto]\n\n");
 	}
 	int licznik = 1;
@@ -79,27 +73,37 @@ void wyswietlliste() {
 
 int main(int argc, char *argv[]) {
 	
-	int x;
+	int wybor;
+	int wartoscdanej;
+	list *pierwszy = NULL;                   //wskaznik na poczatek listy
+	
 	do {
 			printf("LISTA:\n");
-			wyswietlliste();
+			wyswietlliste(pierwszy);
 			puts("");
 		
-		printf("MENU:\n1. Dodaj.\n2. Usun.\n3.Wyjdz\n");
-		scanf(" %d", &x);
-		if (x==1) {
-			if (pierwszy == NULL) {
-				pierwszy = utworzelement();
-			} else {
-				dodaj();
-			}
-		}else if(x==2) {
-			int y;
-			printf("Ktory usunac?");
-			scanf(" %d", &y);
-			usun(y);
-		}else break;
+		printf("MENU:\n1. Dodaj.\n2. Usun.\n");
+		scanf(" %d", &wybor);
+		switch (wybor) {
+			case 1:
+				printf("Podaj dana: "); 
+				scanf("%d", &wartoscdanej);
+				if (pierwszy == NULL) {
+					pierwszy = dodaj(pierwszy, wartoscdanej);
+				}else {
+					dodaj(pierwszy, wartoscdanej);
+				}
+				break;
+			
+			case 2:
+				printf("Ktory usunac?");
+				scanf(" %d", &wartoscdanej);
+				pierwszy = usun(pierwszy, wartoscdanej);
+				break;
+			default:
+				break;
+		}
 		system("cls");    //czysci ekran
-	}while (x!=4);
+	}while (1);
 	return 0;
 }
