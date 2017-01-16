@@ -9,9 +9,10 @@ typedef struct lista {
 }list;
 
  list *dodaj (list* poczatek, int wartosc) {        //utworz, potem wsp
-        list *nowa = (list*)malloc(sizeof(list));   //zasada dzia³ania jak "new" w c++
+        list *nowa = (list*)malloc(sizeof(list));   //zasada dziaÅ‚ania jak "new" w c++
         nowa->dana = wartosc;
         nowa->nastepna = NULL;
+	 // TODO: formatowanie, ustaw w swoim IDE zeby uzywal 2 spacje zamiast tabulacji
 		if (poczatek == NULL) {
         	return nowa;
 		}else {
@@ -21,15 +22,18 @@ typedef struct lista {
     		}
 			temp->nastepna = nowa;                        //przypisanie wartosci
 		}
+	 // TODO: return poczatek
 		
 };
 
+// TODO: zmien nazwe na usun_wszystle
 list *usun (list* poczatek, int wartosc) {
     list *t = poczatek;                      //pomocnicza 1.
     int licznik = 1;                                 //numeracja elementu
 	while (t) {
 		if (t->dana == wartosc) {
     		if (licznik == 1) {                      //jesli to pierwszy element
+			// TODO: musisz zwolnic pamiec zajmowana przez ten element przy uzyciu free.
        			list *temp = poczatek;
         		poczatek = temp->nastepna;
         		t= t->nastepna;                     //przesuwam wskaznik na kolejny element
@@ -88,6 +92,7 @@ int main(int argc, char *argv[]) {
 			case 1:
 				printf("Podaj dana: "); 
 				scanf("%d", &wartoscdanej);
+				// TODO: po prostu pierwszy = dodaj(pierwszy, wartoscdanej);
 				if (pierwszy == NULL) {
 					pierwszy = dodaj(pierwszy, wartoscdanej);
 				}else {
@@ -100,10 +105,12 @@ int main(int argc, char *argv[]) {
 				scanf(" %d", &wartoscdanej);
 				pierwszy = usun(pierwszy, wartoscdanej);
 				break;
+			// TODO: zeby wyjsc daj case 3: return 0;
 			default:
 				break;
 		}
 		system("cls");    //czysci ekran
 	}while (1);
+	// TODO: usun, tutaj kod nigdy nie dojdzie
 	return 0;
 }
